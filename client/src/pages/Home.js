@@ -11,7 +11,6 @@ function Home() {
   const masonryRef = useRef(null);
   const iso = useRef(null);
 
-  // Fetch campaigns and stats
   useEffect(() => {
     async function fetchData() {
       try {
@@ -28,7 +27,6 @@ function Home() {
     fetchData();
   }, []);
 
-  // Initialize Masonry grid
   useEffect(() => {
     if (!masonryRef.current) return;
     imagesLoaded(masonryRef.current, () => {
@@ -41,15 +39,11 @@ function Home() {
     return () => iso.current && iso.current.destroy();
   }, [campaigns]);
 
-  // Filter grid on category change
   useEffect(() => {
     if (iso.current) {
       const filter = selectedCategory === 'All'
         ? '*'
-        : `.${ =
-        selectedCategory === 'All'
-          ? '*'
-          : `.${selectedCategory.toLowerCase().replace(/ & /g, '-')}`;
+        : `.${selectedCategory.toLowerCase().replace(/ & /g, '-')}`;
       iso.current.arrange({ filter });
     }
   }, [selectedCategory]);
@@ -64,14 +58,31 @@ function Home() {
     { key: 'Technology', label: 'Technology', icon: '💻' }
   ];
 
+  const slides = [
+    {
+      id: 1,
+      title: 'Ultimate Crowdfunding WordPress Theme',
+      subtitle: 'Raising Money Has Never Been Easy',
+      background: '/images/slider1.jpg',
+      cta: { text: 'Explore Projects', link: '/explore' }
+    },
+    {
+      id: 2,
+      title: 'Reach More. Raise More. Do More.',
+      subtitle: 'Raising money has never been so easy. We are here to help your cause starting today!',
+      background: '/images/slider2.jpg',
+      cta: { text: 'Explore Projects', link: '/explore' }
+    }
+  ];
+
   return (
     <div className="home">
       {/* Top Bar */}
       <div className="top-bar">
         <div className="social-icons">
-          <a href="#"><i className="fab fa-facebook-f"/></" /></a>
-          <a href="#"><i className="fab fa-twitter"/></" /></a>
-          <a href="#"><i className="fab fa-instagram"/></" /></a>
+          <a href="#"><i className="fab fa-facebook-f" /></a>
+          <a href="#"><i className="fab fa-twitter" /></a>
+          <a href="#"><i className="fab fa-instagram" /></a>
         </div>
         <div className="user-links">
           <a href="/dashboard">Dashboard</a>
@@ -90,7 +101,7 @@ function Home() {
             <a href="/pages">Pages</a>
             <a href="/news">News</a>
             <a href="/contact">Contact</a>
-            <a className="search-icon" href="#"><i className="fas fa-search"/></" /></a>
+            <a className="search-icon" href="#"><i className="fas fa-search" /></a>
           </div>
         </div>
       </nav>
@@ -98,39 +109,13 @@ function Home() {
       {/* Hero Slider */}
       <section className="hero">
         <div className="slider-container">
-          {[
-            { id: 1,             {
-              id: 1,
-              title: 'Ultimate Crowdfunding WordPress Theme', ',
-              subtitle: 'Raising Money Has Never Been Easy', ',
-              background: '/images/slider1.jpg', ',
-              cta: { text: 'Explore Projects', link: '/explore' } },
-            { id: 2, ' }
-            },
-            {
-              id: 2,
-              title: 'Reach More. Raise More. Do More.', subtitle: '.',
-              subtitle:
-                'Raising money has never been so easy. We are here to help your cause starting today!', !',
-              background: '/images/slider2.jpg', ',
-              cta: { text: 'Explore Projects', link: '/explore' } }
-' }
-            }
-          ].map(slide => (
-            <div key={slide.id} className="slide" 
-              key={slide.id}
-              className="slide"
-              style={{ backgroundImage: `url(${slide.background})` }}>
-              <})` }}
-            >
-              <div className="slide-overlay"/>
-" />
+          {slides.map(slide => (
+            <div key={slide.id} className="slide" style={{ backgroundImage: `url(${slide.background})` }}>
+              <div className="slide-overlay" />
               <div className="slide-content">
                 <h1 className="slide-title">{slide.title}</h1>
                 <p className="slide-subtitle">{slide.subtitle}</p>
-                <a href={slide.cta.link} className="btn-primary slide-button">{slide.cta.text}</">
-                  {slide.cta.text}
-                </a>
+                <a href={slide.cta.link} className="btn-primary slide-button">{slide.cta.text}</a>
               </div>
             </div>
           ))}
@@ -140,14 +125,10 @@ function Home() {
       {/* Categories Flip Boxes */}
       <section className="categories">
         <h2>Browse by Categories</h2>
-        <p>>
-          Discover projects just for you and get great recommendations when you select your interests.</
-          select your interests.
-        </p>
+        <p>Discover projects just for you and get great recommendations when you select your interests.</p>
         <div className="flip-box-grid">
           {categories.map(cat => (
-            <div key={cat.key} className="flip-box" onClick={()=>setSelectedCategory(cat.key)}>
-
+            <div
               key={cat.key}
               className={`flip-box ${selectedCategory === cat.key ? 'active' : ''}`}
               onClick={() => setSelectedCategory(cat.key)}
@@ -170,27 +151,20 @@ function Home() {
       {/* Projects Masonry */}
       <section className="projects">
         <h2>Explore Our Projects</h2>
-        <p>>
-          Discover campaigns just for you and get great recommendations when you select your interests.</
-          select your interests.
-        </p>
+        <p>Discover campaigns just for you and get great recommendations when you select your interests.</p>
         <div ref={masonryRef} className="masonry-grid">
           {campaigns.map(c => (
-            <div key={c._id} 
+            <div
               key={c._id}
-              className={`masonry-item ${c.category.toLowerCase().replace(/ & /g,'-')}`}>
-
-                .toLowerCase()
-                .replace(/ & /g, '-')}`}
+              className={`masonry-item ${c.category.toLowerCase().replace(/ & /g, '-')}`}
             >
-              {/* project card content here */}
+              {/* Project card content can go here */}
             </div>
           ))}
         </div>
       </section>
 
-      {/* Stats Counters */
- */}
+      {/* Stats */}
       {stats && (
         <section className="stats-yellow">
           <div className="stats-container">
@@ -199,7 +173,7 @@ function Home() {
               <p>Projects Completed</p>
             </div>
             <div className="stat-item">
-              <h3>${(stats.totalRaised/ / 1000).toFixed(1)}k</h3>
+              <h3>${(stats.totalRaised / 1000).toFixed(1)}k</h3>
               <p>Funds Raised</p>
             </div>
             <div className="stat-item">
@@ -224,9 +198,7 @@ function Home() {
             <li>Extend your campaign with on-demand support</li>
             <li>Fast track to the global market</li>
           </ul>
-          <button className="btn-primary">">
-            All the Right Experts to Help Your Business</
-          </button>
+          <button className="btn-primary">All the Right Experts to Help Your Business</button>
         </div>
         <div className="image-block">
           <img src="/images/concept.jpg" alt="Concept to Market" />
@@ -238,8 +210,7 @@ function Home() {
         <h2>Our Testimonials</h2>
         <p>Discover what our users say about their experience.</p>
         <div className="testi-grid">
-          {[1,2,3].map(i=>(
-, 2, 3].map(i => (
+          {[1, 2, 3].map(i => (
             <div key={i} className="testi-card">
               <p>“Lorem ipsum dolor sit amet, consectetur adipiscing elit...”</p>
               <h4>Jane Smith</h4>
@@ -266,7 +237,7 @@ function Home() {
         </div>
         <div className="footer-links">
           <div>
-            <h4>Get Started</n            </h4>
+            <h4>Get Started</h4>
             <a href="/news">News</a>
             <a href="/pages">Pages</a>
             <a href="/about">About</a>
@@ -280,20 +251,15 @@ function Home() {
           </div>
           <div>
             <h4>Explore</h4>
-            {categories.filter(c=>c.key!=='All').map(c=><
-              .filter(c => c.key !== 'All')
-              .map(c => (
-                <a key={c.key} href={`/explore/${c.key.toLowerCase().replace(/ & /g,'-')}`}>{c.label}</a>)}
-, '-')}`}>
-                  {c.label}
-                </a>
-              ))}
+            {categories.filter(c => c.key !== 'All').map(c => (
+              <a key={c.key} href={`/explore/${c.key.toLowerCase().replace(/ & /g, '-')}`}>
+                {c.label}
+              </a>
+            ))}
           </div>
         </div>
         <div className="copyright">© 2025 Funlin. All Rights Reserved.</div>
-      </section>}
-
->
+      </section>
     </div>
   );
 }
