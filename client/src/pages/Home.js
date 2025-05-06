@@ -35,10 +35,14 @@ function Home() {
     { name: 'Technology', emoji: '💻' }
   ];
 
+  const filteredCampaigns = selectedCategory === 'All'
+    ? campaigns
+    : campaigns.filter(c => c.category === selectedCategory);
+
   return (
     <div className="home">
 
-          {/* Navigation */}
+      {/* Navigation */}
       <nav className="main-nav">
         <div className="nav-container">
           <div className="logo">CapiGrid</div>
@@ -50,7 +54,8 @@ function Home() {
           </div>
         </div>
       </nav>
-    
+
+      {/* Hero Section */}
       <section className="hero">
         <div className="overlay">
           <h1>Reach More.<br />Raise More.<br />Do More.</h1>
@@ -59,6 +64,7 @@ function Home() {
         </div>
       </section>
 
+      {/* Categories Section */}
       <section className="categories">
         <h2>Browse by Categories</h2>
         <div className="category-grid">
@@ -74,10 +80,11 @@ function Home() {
         </div>
       </section>
 
+      {/* Projects Section */}
       <section className="projects">
         <h2>Explore Our Projects</h2>
         <div className="project-grid">
-          {campaigns.map((campaign) => (
+          {filteredCampaigns.map((campaign) => (
             <div key={campaign._id} className="project-card">
               <div 
                 className="project-image"
@@ -102,6 +109,7 @@ function Home() {
         </div>
       </section>
 
+      {/* Statistics Section */}
       {stats && (
         <section className="stats">
           <div className="stat-item">
@@ -123,11 +131,11 @@ function Home() {
         </section>
       )}
 
+      {/* Call-to-Action Section */}
       <section className="footer-cta">
         <h2>Your Story Starts Here</h2>
         <button className="cta-button">Start a Project</button>
       </section>
-
 
       {/* Footer */}
       <footer className="main-footer">
