@@ -18,3 +18,9 @@
     "nodemon": "^3.0.2"
   }
 }
+{
+  timestamps: true,
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
+}
+
