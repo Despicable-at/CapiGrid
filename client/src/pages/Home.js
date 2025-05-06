@@ -37,6 +37,20 @@ function Home() {
 
   return (
     <div className="home">
+
+          {/* Navigation */}
+      <nav className="main-nav">
+        <div className="nav-container">
+          <div className="logo">CapiGrid</div>
+          <div className="nav-links">
+            <a href="/">Home</a>
+            <a href="/projects">Projects</a>
+            <a href="/about">About</a>
+            <a href="/contact">Contact</a>
+          </div>
+        </div>
+      </nav>
+    
       <section className="hero">
         <div className="overlay">
           <h1>Reach More.<br />Raise More.<br />Do More.</h1>
@@ -113,6 +127,25 @@ function Home() {
         <h2>Your Story Starts Here</h2>
         <button className="cta-button">Start a Project</button>
       </section>
+    </div>
+  );
+}
+
+      {/* Footer */}
+      <footer className="main-footer">
+        <div className="footer-content">
+          <div className="footer-section">
+            <h4>CapiGrid</h4>
+            <p>Transforming ideas into reality through community support</p>
+          </div>
+          <div className="footer-section">
+            <h4>Quick Links</h4>
+            <a href="/about">About Us</a>
+            <a href="/blog">Blog</a>
+            <a href="/faq">FAQ</a>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
