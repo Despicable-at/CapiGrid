@@ -78,4 +78,143 @@
 .footer-links { display:flex; justify-content:space-around; }
 .footer-links h4 { margin-bottom:1rem; }
 .footer-links a { display:block; color:#fff; text-decoration:none; margin-bottom:0.5rem; }
-.copyright { grid-column:1/-1; text-align:center; margin-top:2rem; font-size:0.875rem; }
+.copyright { grid-column:1/-1; text-align:center; margin-top:2rem; font-size:0.875rem; }/* START BLOG STYLES */
+#page-title-pro.page-title-pro-post-page {
+		
+		background-repeat: no-repeat; background-position:center center; background-size: cover;
+}
+
+.progression-blog-content {
+	border-color:rgba(0,0,0, 0.07);
+}
+.comment-body {
+	border-color:#f6f3f1;
+}
+.comment-body:before {
+	border-right-color:#f6f3f1;
+}
+h2.progression-blog-title a {color:#2e3c4b;}
+h2.progression-blog-title a:hover {color:#00b964;}
+/* END BLOG STYLES */
+/* START SHOP STYLES */
+#progression-studios-woocommerce-single-bottom .related.products {
+		display:block;
+}
+#boxed-layout-pro ul.products h2.woocommerce-loop-category__title mark {
+		display:inline-block;
+}
+
+#content-pro .wpneo-shadow,
+.progression-studios-shop-index-text {
+		border-color:rgba(0,0,0, 0.07);
+		background:#ffffff;
+}
+#progression-studios-woocommerce-single-bottom .woocommerce-tabs ul.wc-tabs li.active,
+#progression-studios-woocommerce-single-bottom {
+	background:#F6F3F1;
+}
+/* END SHOP STYLES */
+/* START BUTTON STYLES */
+
+#content-pro #wpneofrontenddata .wpneo-fields textarea,
+#content-pro #wpneofrontenddatan .wpneo-fields input[type='number'],
+#content-pro #wpneofrontenddata .wpneo-fields input[type='text'],
+#content-pro #wpneofrontenddata .wpneo-fields input[type='email'],
+#content-pro #wpneofrontenddata .wpneo-fields input[type='password'],
+#content-pro #wpneofrontenddata .wpneo-fields input[type='number'],
+
+#content-pro #wpneo-registration .wpneo-fields textarea,
+#content-pro #wpneo-registration .wpneo-fields input[type='number'],
+#content-pro #wpneo-registration .wpneo-fields input[type='text'],
+#content-pro #wpneo-registration .wpneo-fields input[type='email'],
+#content-pro #wpneo-registration .wpneo-fields input[type='password'],
+#content-pro .woocommerce table.shop_table .coupon input#coupon_code, #content-pro .woocommerce table.shop_table input, form.checkout.woocommerce-checkout textarea.input-text, form.checkout.woocommerce-checkout input.input-text,
+.post-password-form input, .search-form input.search-field, .wpcf7 select, #respond textarea, #respond input, .wpcf7-form input, .wpcf7-form textarea {
+	background-color:#f6f3f1;
+	border-color:#f6f3f1;
+}
+
+#content-pro .form-field input[type='text'],
+#content-pro .form-field textarea,
+#content-pro .wpneo-fields textarea,
+#content-pro .wpneo-fields input[type='number'],
+#content-pro .wpneo-fields input[type='text'],
+#content-pro .wpneo-fields input[type='email'],
+#content-pro .wpneo-fields input[type='password'] {
+	border-radius:3px;
+}
+
+body #content-pro .width-container-pro .woocommerce textarea,
+body #content-pro .width-container-pro .woocommerce .shop_table input#coupon_code[type=text],
+body #content-pro .width-container-pro .woocommerce input[type=text],
+body #content-pro .width-container-pro .woocommerce input[type=password],
+body #content-pro .width-container-pro .woocommerce input[type=url],
+body #content-pro .width-container-pro .woocommerce input[type=tel],
+body #content-pro .width-container-pro .woocommerce input[type=number],
+body #content-pro .width-container-pro .woocommerce input[type=color],
+body #content-pro .width-container-pro .woocommerce input[type=email],
+#progression-studios-woocommerce-single-top .quantity input {
+	background-color:#f6f3f1;
+	border-radius:3px;
+	border-color:#f6f3f1;
+}
+.wpneo-single-sidebar input.input-text.wpneo_donate_amount_field {
+	border-radius:3px;
+}
+#content-pro #loginform p.login-submit input#wp-submit,
+.progression-studios-shop-overlay-buttons a.added_to_cart, .wp-block-button a.wp-block-button__link, .post-password-form input[type=submit], #respond input.submit, .wpcf7-form input.wpcf7-submit,
+.infinite-nav-pro a, #boxed-layout-pro .woocommerce .shop_table input.button, #boxed-layout-pro .form-submit input#submit, #boxed-layout-pro #customer_login input.button, #boxed-layout-pro .woocommerce-checkout-payment input.button, #boxed-layout-pro button.button, #boxed-layout-pro a.button  {
+	font-size:13px;
+}
+.search-form input.search-field,
+.wpcf7 select, .post-password-form input, #respond textarea, #respond input, .wpcf7-form input, .wpcf7-form textarea {
+	border-radius:3px;
+}
+.product #campaign_loved_html {
+	background:#fed857;
+}
+#helpmeeout-login-form a,
+.product #campaign_loved_html i.wpneo-icon:before {
+	color: #2e3c4b;
+}
+#helpmeeout-login-form {
+	color: #2e3c4b;
+	background:#fed857;
+	border-color:#fed857;
+}
+#helpmeeout-login-form:before {
+	border-bottom: 8px solid #fed857;
+}
+
+body .wpd-av {
+	border-color: #2e3c4b;	
+}
+body .wpd-av button.yes {
+	background-color: #2e3c4b;
+	color: #2e3c4b;
+}
+.tags-progression-studios a:hover,
+body .wpd-av button.yes:hover {
+	background-color: #fed857;
+	color: #2e3c4b;
+}
+
+ul.funlin-shop-index-category li a,
+.progression-page-nav a:hover, .progression-page-nav span, #content-pro ul.page-numbers li a:hover, #content-pro ul.page-numbers li span.current {
+	color:#2e3c4b;
+	background:#fed857;
+}
+.progression-page-nav a:hover span {
+	color:#2e3c4b;
+}
+.flex-direction-nav a:hover, #boxed-layout-pro .woocommerce-shop-single .summary button.button,
+#boxed-layout-pro .woocommerce-shop-single .summary a.button {
+	color:#2e3c4b;
+	background:#fed857;
+}
+
+#content-pro #loginform p.login-submit input#wp-submit,
+#progression-sticky-scrolled header#masthead-pro #progression-checkout-basket a.cart-button-header-cart, #progression-checkout-basket a.cart-button-header-cart, .progression-studios-shop-overlay-buttons a.added_to_cart:hover, .infinite-nav-pro a:hover, .wp-block-button a.wp-block-button__link:hover, .woocommerce.form input.button:hover, .woocommerce.form input.woocommerce-Button:hover, #boxed-layout-pro .woocommerce-shop-single .summary button.button:hover, #boxed-layout-pro .woocommerce-shop-single .summary a.button:hover, .post-password-form input[type=submit]:hover, #respond input.submit:hover, .wpcf7-form input.wpcf7-submit:hover {
+	color:#ffffff;
+	background:#2e3c4b;
+}
