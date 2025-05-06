@@ -8,7 +8,8 @@
     "react-router-dom": "^6.22.3",
     "react-scripts": "5.0.1",
     "axios": "^1.6.8",
-    "isotope-layout": "^3.0.6"
+    "isotope-layout": "^3.0.6",
+    "imagesloaded": "^5.0.0"
   },
   "scripts": {
     "start": "react-scripts start",
