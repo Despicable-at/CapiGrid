@@ -127,9 +127,7 @@ function Home() {
         <h2>Your Story Starts Here</h2>
         <button className="cta-button">Start a Project</button>
       </section>
-    </div>
-  );
-}
+
 
       {/* Footer */}
       <footer className="main-footer">
