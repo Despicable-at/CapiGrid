@@ -4,7 +4,7 @@
 }
 
 .hero {
-  background: url('/hero.jpg') center/cover no-repeat;
+  background: #00;
   color: white;
   text-align: center;
   padding: 100px 20px;
