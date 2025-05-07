@@ -7,7 +7,7 @@ import { requireAuth } from './middleware/auth';
 import projectRoutes from './routes/projects';
 import pledgeRoutes from './routes/pledge'; // Import pledge routes
 import profileRoutes from './routes/profile'; // Import profile routes
-
+import { errorHandler } from './middleware/errorHandler';
 import express from 'express';
 import http from 'http';
 import { Server as SocketIOServer } from 'socket.io';
@@ -33,6 +33,8 @@ app.use('/api/projects', projectRoutes);
 app.use('/api/pledges', pledgeRoutes); // Register pledge routes
 
 app.use('/api/profile', profileRoutes); // Register profile routes
+
+app.use(errorHandler);
 
 // DB Connection
 connectDB();
