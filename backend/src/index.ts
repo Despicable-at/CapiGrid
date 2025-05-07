@@ -4,6 +4,7 @@ dotenv.config();
 
 import authRoutes from './routes/auth';
 import { requireAuth } from './middleware/auth';
+import projectRoutes from './routes/projects';
 
 import express from 'express';
 import http from 'http';
@@ -23,6 +24,8 @@ const io = new SocketIOServer(server, {
 app.use(express.json());
 
 app.use('/api/auth', authRoutes);
+
+app.use('/api/projects', projectRoutes);
 
 // DB Connection
 connectDB();
