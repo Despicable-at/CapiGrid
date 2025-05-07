@@ -11,5 +11,6 @@ router.get('/', (_req, res) => {
 // Actual auth endpoints
 router.post('/signup', signup);
 router.post('/login',  login);
+router.get('/verify-email/:token', verifyEmail);
 
 export default router;
