@@ -9,10 +9,18 @@ router.get('/', (_req, res) => {
 });
 
 // Actual auth endpoints
-router.post('/google', googleAuth);
+// Google OAuth
+router.post('/google', [
+  body('token').notEmpty().withMessage('Google token is required'),
+], googleAuth);
 
-router.post('/set-password', setPassword);
+// Set password (for Google users)
+router.post('/set-password', [
+  body('email').isEmail().withMessage('Valid email required'),
+  body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
+], setPassword);
 
+// Signup
 router.post('/signup', [
     body('name').notEmpty().withMessage('Name is required'),
     body('email').isEmail().withMessage('Invalid email address'),
@@ -21,10 +29,26 @@ router.post('/signup', [
       .withMessage('Password must be at least 6 characters'),
   ], signup);
 
-router.post('/login',  login);
+// Login
+router.post('/login', [
+  body('email').isEmail().withMessage('Valid email required'),
+  body('password').notEmpty().withMessage('Password is required'),
+], login);
 
-router.get('/verify-email/:token', verifyEmail);
-router.post('/forgot-password', forgotPassword);
-router.post('/reset-password/:token', resetPassword);
+// Email verification
+router.get('/verify-email/:token', [
+  param('token').notEmpty().withMessage('Verification token is required'),
+], verifyEmail);
+
+// Forgot Password
+router.post('/forgot-password', [
+  body('email').isEmail().withMessage('Valid email required'),
+], forgotPassword);
+
+// Reset Password
+router.post('/reset-password/:token', [
+  param('token').notEmpty().withMessage('Reset token is required'),
+  body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
+], resetPassword);
 
 export default router;
