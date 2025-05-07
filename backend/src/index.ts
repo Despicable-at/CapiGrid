@@ -48,4 +48,9 @@ io.on('connection', (socket) => {
 });
 
 const PORT = process.env.PORT || 5000;
+// src/index.ts (just above server.listen)
+app.get('/', (_req, res) => {
+  res.send('🚀 Capigrid API is live! Hit /api/status for health-check.');
+});
+
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
