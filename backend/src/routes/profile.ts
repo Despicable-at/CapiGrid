@@ -1,6 +1,7 @@
 import express from 'express';
 import { getProfile, updateProfile, getUserPledges } from '../controllers/profileController';
-import { authenticate } from '../middleware/auth';
+import { requireAuth } from '../middleware/auth';
+
 
 const router = express.Router();
 
