@@ -5,6 +5,7 @@ dotenv.config();
 import authRoutes from './routes/auth';
 import { requireAuth } from './middleware/auth';
 import projectRoutes from './routes/projects';
+import pledgeRoutes from './routes/pledge'; // Import pledge routes
 
 import express from 'express';
 import http from 'http';
@@ -13,6 +14,7 @@ import { connectDB } from './config/db';
 import { User } from './models/User';
 import { Project } from './models/Project';
 import { Pledge } from './models/Pledge';
+
 
 const app = express();
 const server = http.createServer(app);
@@ -27,6 +29,7 @@ app.use('/api/auth', authRoutes);
 
 app.use('/api/projects', projectRoutes);
 
+app.use('/api/pledges', pledgeRoutes); // Register pledge routes
 // DB Connection
 connectDB();
 
