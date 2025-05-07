@@ -1,87 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CapiGrid</title>
-
-  <!-- External Styles from Funlin Template -->
-  <link rel='stylesheet' id='boosted-elements-progression-frontend-styles-css' href='https://funlin.progressionstudios.com/wp-content/plugins/boosted-elements-progression/assets/css/frontend.min.css' media='all' />
-  <link rel='stylesheet' id='elementor-icons-css' href='https://funlin.progressionstudios.com/wp-content/plugins/elementor/assets/lib/eicons/css/elementor-icons.min.css' media='all' />
-  <link rel='stylesheet' id='elementor-frontend-css' href='https://funlin.progressionstudios.com/wp-content/plugins/elementor/assets/css/frontend.min.css' media='all' />
-  <link rel='stylesheet' id='elementor-post-296-css' href='https://funlin.progressionstudios.com/wp-content/uploads/elementor/css/post-296.css' media='all' />
-  <link rel='stylesheet' id='elementor-icons-shared-0-css' href='https://funlin.progressionstudios.com/wp-content/plugins/elementor/assets/lib/font-awesome/css/fontawesome.min.css' media='all' />
-  <link rel='stylesheet' id='elementor-icons-fa-solid-css' href='https://funlin.progressionstudios.com/wp-content/plugins/elementor/assets/lib/font-awesome/css/solid.min.css' media='all' />
-  <link rel='stylesheet' id='widget-heading-css' href='https://funlin.progressionstudios.com/wp-content/plugins/elementor/assets/css/widget-heading.min.css' media='all' />
-  <link rel='stylesheet' id='widget-counter-css' href='https://funlin.progressionstudios.com/wp-content/plugins/elementor/assets/css/widget-counter.min.css' media='all' />
-  <link rel='stylesheet' id='widget-icon-list-css' href='https://funlin.progressionstudios.com/wp-content/plugins/elementor/assets/css/widget-icon-list.min.css' media='all' />
-  <link rel='stylesheet' id='widget-image-css' href='https://funlin.progressionstudios.com/wp-content/plugins/elementor/assets/css/widget-image.min.css' media='all' />
-  <link rel='stylesheet' id='elementor-post-20-css' href='https://funlin.progressionstudios.com/wp-content/uploads/elementor/css/post-20.css' media='all' />
-  <link rel='stylesheet' id='elementor-post-53-css' href='https://funlin.progressionstudios.com/wp-content/uploads/elementor/css/post-53.css' media='all' />
-  <link rel='stylesheet' id='elementor-icons-fa-brands-css' href='https://funlin.progressionstudios.com/wp-content/plugins/elementor/assets/lib/font-awesome/css/brands.min.css' media='all' />
-
-  <!-- jQuery and WooCommerce Scripts -->
-  <script src="https://funlin.progressionstudios.com/wp-includes/js/jquery/jquery.min.js"></script>
-  <script src="https://funlin.progressionstudios.com/wp-includes/js/jquery/jquery-migrate.min.js"></script>
-  <script defer src="https://funlin.progressionstudios.com/wp-content/plugins/woocommerce/assets/js/jquery-blockui/jquery.blockUI.min.js"></script>
-  <script defer src="https://funlin.progressionstudios.com/wp-content/plugins/woocommerce/assets/js/frontend/add-to-cart.min.js"></script>
-  <script defer src="https://funlin.progressionstudios.com/wp-content/plugins/woocommerce/assets/js/js-cookie/js.cookie.min.js"></script>
-  <script defer src="https://funlin.progressionstudios.com/wp-content/plugins/woocommerce/assets/js/frontend/woocommerce.min.js"></script>
-  <script src="https://funlin.progressionstudios.com/wp-includes/js/utils.min.js"></script>
-  <script src="https://funlin.progressionstudios.com/wp-includes/js/plupload/moxie.min.js"></script>
-  <script src="https://funlin.progressionstudios.com/wp-includes/js/plupload/plupload.min.js"></script>
-
-  <!-- CapiGrid Styles -->
-  <link rel="stylesheet" href="%PUBLIC_URL%/Home.css" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="FundAfrica - Crowdfunding Platform for African Projects" />
+  <title>CapiGrid | Crowdfunding Platform</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+  
+  <!-- Preconnect to external resources -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Mobile theme color -->
+  <meta name="theme-color" content="#3182ce" />
+  
+  <!-- iOS meta tags -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  
+  <!-- Manifest -->
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+  
+  <!-- Preload critical CSS -->
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      background-color: #f7fafc;
+    }
+    
+    #root {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+  </style>
 </head>
-<body class="home wp-singular page-template-default page page-id-20 logged-in wp-theme-funlin-progression theme-funlin-progression woocommerce-no-js elementor-default elementor-kit-296 elementor-page elementor-page-20">
-
-  <!-- Template Header -->
-  <div id="boxed-layout-pro" class="progression-studios-page-title-center progression-studios-header-shadow progression-studios-header-normal-width progression-studios-blog-post-title-center progression-studios-nav-cart-icon-off progression-studios-logo-position-left progression_studios_default_navigation_color progression-studios-one-page-nav-off">
-    <div id="progression-studios-header-position">
-      <!-- Top Header Top -->
-      <div id="funlin-progression-header-top" class="progression_studios_hide_top_left_bar on-pro">
-        <div id="progression-studios-header-top-border-bottom">
-          <div class="width-container-pro">
-            <div class="progression-studios-header-left">
-              <ul class="progression-studios-header-social-icons">
-                <li><a href="#" class="progression-studios-facebook" title="Facebook"><i class="fab fa-facebook-f"></i></a></li>
-                <li><a href="#" class="progression-studios-twitter" title="Twitter"><i class="fab fa-twitter"></i></a></li>
-                <li><a href="#" class="progression-studios-instagram" title="Instagram"><i class="fab fa-instagram"></i></a></li>
-                <li><a href="#" class="progression-studios-pinterest" title="Pinterest"><i class="fab fa-pinterest"></i></a></li>
-              </ul>
-            </div>
-            <div class="progression-studios-header-right">
-              <ul class="sf-menu">
-                <li><a href="/dashboard/"><i class="fas fa-user-circle"></i> Dashboard</a></li>
-                <li><a href="/start-a-project/"><i class="far fa-file-alt"></i> Start a Project</a></li>
-                <li><a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- Main Navigation -->
-      <div id="progression-studios-header-width">
-        <header id="masthead-pro" class="progression-studios-site-header progression-studios-nav-center">
-          <div id="logo-nav-pro">
-            <div class="width-container-pro progression-studios-logo-container">
-              <div id="logo-pro"><a href="/"><img src="https://funlin.progressionstudios.com/wp-content/themes/funlin-progression/images/logo.png" alt="Funlin"/></a></div>
-              <div class="mobile-menu-icon-pro"><i class="fas fa-bars"></i></div>
-              <div id="progression-studios-header-search-icon"><i class="progression-icon-search"></i></div>
-              <nav id="site-navigation" class="main-navigation">
-                <!-- Navigation links will be rendered by React Router -->
-              </nav>
-            </div>
-          </div>
-        </header>
-      </div>
-    </div>
-  </div>
-
-  <!-- React App Root -->
+<body>
+  <noscript>
+    <strong>We're sorry but FundAfrica doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+  </noscript>
+  
   <div id="root"></div>
-  <script src="%PUBLIC_URL%/bundle.js"></script>
+  
+  <!-- Load polyfills for older browsers -->
+  <script>
+    if (!window.Promise) {
+      document.write('<script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"><\/script>');
+    }
+    if (!window.fetch) {
+      document.write('<script src="https://cdn.jsdelivr.net/npm/whatwg-fetch@3.6.2/dist/fetch.umd.min.js"><\/script>');
+    }
+  </script>
 </body>
 </html>
