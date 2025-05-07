@@ -69,7 +69,7 @@ export const deleteProject = async (req: Request, res: Response) => {
     if (project.creator.toString() !== (req as any).userId)
       return res.status(403).json({ message: 'Not authorized' });
 
-    await project.remove();
+    await Project.deleteOne({ _id: project._id });
     res.json({ message: 'Project deleted' });
   } catch (err) {
     res.status(500).json({ message: 'Delete project failed', error: err });
