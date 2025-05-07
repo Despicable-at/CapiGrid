@@ -10,9 +10,19 @@ router.get('/', (_req, res) => {
 
 // Actual auth endpoints
 router.post('/google', googleAuth);
+
 router.post('/set-password', setPassword);
-router.post('/signup', signup);
+
+router.post('/signup', [
+    body('name').notEmpty().withMessage('Name is required'),
+    body('email').isEmail().withMessage('Invalid email address'),
+    body('password')
+      .isLength({ min: 6 })
+      .withMessage('Password must be at least 6 characters'),
+  ], signup);
+
 router.post('/login',  login);
+
 router.get('/verify-email/:token', verifyEmail);
 router.post('/forgot-password', forgotPassword);
 router.post('/reset-password/:token', resetPassword);
