@@ -1,62 +1,24 @@
 const mongoose = require('mongoose');
 
-const campaignSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: [true, 'Campaign title is required'],
-    trim: true
+const CampaignSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  description: { type: String, required: true },
+  category: { 
+    type: String, 
+    required: true,
+    enum: ['Education', 'Film & Video', 'Community', 'Food', 'Games', 'Technology', 'Business']
   },
-  description: {
-    type: String,
-    required: [true, 'Description is required']
-  },
-  category: {
-    type: String,
-    required: [true, 'Category is required'],
-    enum: ['Technology', 'Art', 'Food', 'Games', 'Education']
-  },
-  goal: {
-    type: Number,
-    required: [true, 'Funding goal is required'],
-    min: [100, 'Goal must be at least $100']
-  },
-  pledged: {
-    type: Number,
-    default: 0
-  },
-  backers: {
-    type: Number,
-    default: 0
-  },
-  deadline: {
-    type: Date,
-    required: [true, 'Deadline is required']
-  },
-  creator: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
-  },
-  imageUrl: {
-    type: String,
-    required: [true, 'Image URL is required']
-  },
-  status: {
-    type: String,
-    enum: ['active', 'successful', 'failed'],
-    default: 'active'
-  },
+  goalAmount: { type: Number, required: true },
+  raisedAmount: { type: Number, default: 0 },
+  backers: { type: Number, default: 0 },
+  imageUrl: { type: String, default: '/default-campaign.jpg' },
+  creator: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   rewards: [{
-    title: String,
+    tier: String,
     description: String,
-    minimumPledge: Number
-  }]
-}, {
-  timestamps: true
-});
+    amount: Number
+  }],
+  endDate: { type: Date, required: true }
+}, { timestamps: true });
 
-campaignSchema.virtual('daysRemaining').get(function() {
-  return Math.ceil((this.deadline - Date.now()) / (1000 * 60 * 60 * 24));
-});
-
-module.exports = mongoose.model('Campaign', campaignSchema);
+module.exports = mongoose.model('Campaign', CampaignSchema);
