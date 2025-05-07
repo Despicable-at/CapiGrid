@@ -88,5 +88,7 @@ export const verifyEmail = async (req: Request, res: Response) => {
   } catch (err) {
     res.status(400).json({ message: 'Verification failed', error: err });
   }
+  if (!user.isVerified) return res.status(403).json({ message: 'Verify your email before logging in.' });
+
 };
 
