@@ -2,27 +2,25 @@ const express = require('express');
 const router = express.Router();
 const Campaign = require('../models/Campaign');
 
+
+router.use((req, res, next) => {
+  res.setHeader('Content-Type', 'application/json');
+  next();
+});
+
 // Get all campaigns with filtering
 router.get('/', async (req, res) => {
   try {
-    const { category, search } = req.query;
-    const query = {};
-    
-    if (category && category !== 'All') {
-      query.category = category;
-    }
-    
-    if (search) {
-      query.title = { $regex: search, $options: 'i' };
-    }
-
-    const campaigns = await Campaign.find(query)
-      .sort({ createdAt: -1 })
-      .limit(12);
-      
-    res.json({ success: true, data: campaigns });
+    const campaigns = await Campaign.find().limit(12);
+    res.json({ 
+      success: true,
+      data: campaigns 
+    });
   } catch (err) {
-    res.status(500).json({ success: false, error: err.message });
+    res.status(500).json({ 
+      success: false,
+      error: err.message 
+    });
   }
 });
 
