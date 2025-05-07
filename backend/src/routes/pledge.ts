@@ -1,6 +1,6 @@
 import express from 'express';
 import { createPledge, getPledgesForProject } from '../controllers/pledgeController';
-import { authenticate } from '../middleware/auth';
+import { requireAuth } from '../middleware/auth';
 
 const router = express.Router();
 
