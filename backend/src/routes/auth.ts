@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { signup, login, verifyEmail, forgotPassword, resetPassword } from '../controllers/authController';
+import { signup, login, verifyEmail, forgotPassword, resetPassword, googleAuth, setPassword } from '../controllers/authController';
 
 const router = Router();
 
@@ -9,6 +9,8 @@ router.get('/', (_req, res) => {
 });
 
 // Actual auth endpoints
+router.post('/google', googleAuth);
+router.post('/set-password', setPassword);
 router.post('/signup', signup);
 router.post('/login',  login);
 router.get('/verify-email/:token', verifyEmail);
