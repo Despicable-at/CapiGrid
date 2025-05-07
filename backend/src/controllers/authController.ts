@@ -5,9 +5,23 @@ import { User, IUser } from '../models/User';
 
 const JWT_SECRET = process.env.JWT_SECRET!;
 
+// Email format validation regex
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 // POST /api/auth/signup
 export const signup = async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
+
+  // Validate email format
+  if (!emailRegex.test(email)) {
+    return res.status(400).json({ message: 'Invalid email format' });
+  }
+
+  // Validate password length (must be at least 6 characters)
+  if (password.length < 6) {
+    return res.status(400).json({ message: 'Password must be at least 6 characters long' });
+  }
+
   try {
     const existing = await User.findOne({ email });
     if (existing) return res.status(400).json({ message: 'Email already in use' });
@@ -24,6 +38,17 @@ export const signup = async (req: Request, res: Response) => {
 // POST /api/auth/login
 export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
+
+  // Validate email format
+  if (!emailRegex.test(email)) {
+    return res.status(400).json({ message: 'Invalid email format' });
+  }
+
+  // Validate password length (must be at least 6 characters)
+  if (password.length < 6) {
+    return res.status(400).json({ message: 'Password must be at least 6 characters long' });
+  }
+
   try {
     const user = await User.findOne({ email });
     if (!user) return res.status(400).json({ message: 'Invalid credentials' });
