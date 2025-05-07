@@ -8,6 +8,7 @@ export interface IUser extends Document {
   isVerified: boolean;
   resetPasswordToken?: string;
   resetPasswordExpires?: number;
+  isGoogleUser: boolean;
 }
 
 const userSchema = new Schema<IUser>(
@@ -18,6 +19,7 @@ const userSchema = new Schema<IUser>(
     isVerified: { type: Boolean, default: false },
     resetPasswordToken: { type: String },
     resetPasswordExpires: { type: Number },
+    isGoogleUser: { type: Boolean, default: false },
   },
   { timestamps: { createdAt: true, updatedAt: false } }
 );
