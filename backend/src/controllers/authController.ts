@@ -33,7 +33,18 @@ export const signup = async (req: Request, res: Response) => {
   } catch (err) {
     res.status(500).json({ message: 'Signup failed', error: err });
   }
+
+  const verifyToken = jwt.sign(
+  { userId: user._id },
+  process.env.JWT_SECRET!,
+  { expiresIn: '1d' }
+);
+
+await sendVerificationEmail(email, verifyToken);
+res.status(201).json({ message: 'Signup successful. Check your email to verify your account.' });
+
 };
+
 
 // POST /api/auth/login
 export const login = async (req: Request, res: Response) => {
@@ -62,3 +73,20 @@ export const login = async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Login failed', error: err });
   }
 };
+
+export const verifyEmail = async (req: Request, res: Response) => {
+  const { token } = req.params;
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { userId: string };
+    const user = await User.findById(decoded.userId);
+    if (!user) return res.status(400).json({ message: 'Invalid token' });
+    if (user.isVerified) return res.status(400).json({ message: 'Email already verified' });
+
+    user.isVerified = true;
+    await user.save();
+    res.json({ message: 'Email verified successfully' });
+  } catch (err) {
+    res.status(400).json({ message: 'Verification failed', error: err });
+  }
+};
+
