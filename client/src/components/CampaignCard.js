@@ -7,7 +7,13 @@ const CampaignCard = ({ campaign }) => {
   return (
     <div className="campaign-card">
       <div className="card-image">
-        <img src={campaign.imageUrl} alt={campaign.title} />
+        <img 
+          src={campaign.imageUrl || '/default-campaign.jpg'} 
+          alt={campaign.title}
+          onError={(e) => {
+            e.target.src = '/default-campaign.jpg';
+          }}
+        />
         <span className="category-badge">{campaign.category}</span>
       </div>
       <div className="card-content">
@@ -22,7 +28,7 @@ const CampaignCard = ({ campaign }) => {
           <span>{progress.toFixed(0)}% funded</span>
         </div>
         
-        <Link to={`/campaign/${campaign._id}`} className="view-button">
+        <Link to={`/campaign/${campaign.id}`} className="view-button">
           View Project
         </Link>
       </div>
