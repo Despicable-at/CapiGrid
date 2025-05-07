@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { signup, login, verifyEmail } from '../controllers/authController';
+import { signup, login, verifyEmail, forgotPassword, resetPassword } from '../controllers/authController';
 
 const router = Router();
 
@@ -12,5 +12,7 @@ router.get('/', (_req, res) => {
 router.post('/signup', signup);
 router.post('/login',  login);
 router.get('/verify-email/:token', verifyEmail);
+router.post('/forgot-password', forgotPassword);
+router.post('/reset-password/:token', resetPassword);
 
 export default router;
