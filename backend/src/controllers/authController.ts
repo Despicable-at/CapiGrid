@@ -16,7 +16,7 @@ const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 // POST /api/auth/signup
-export const signup = async (req: Request, res: Response next: NextFunction) => {
+export const signup = async (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
   if (!errors.isEmpty()) {
     // pass to error handler
