@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { body, param } from 'express-validator';
 import { signup, login, verifyEmail, forgotPassword, resetPassword, googleAuth, setPassword } from '../controllers/authController';
 
 const router = Router();
