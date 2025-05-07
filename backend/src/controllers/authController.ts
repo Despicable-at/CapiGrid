@@ -2,11 +2,14 @@ import { Request, Response } from 'express';
 import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { OAuth2Client } from 'google-auth-library';
 import { User, IUser } from '../models/User';
 import { sendVerificationEmail } from '../utils/sendEmail';
 import { sendResetPasswordEmail } from '../utils/sendEmail';
 
 const JWT_SECRET = process.env.JWT_SECRET!;
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // Email format validation
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -147,5 +150,70 @@ export const resetPassword = async (req: Request, res: Response) => {
     res.json({ message: 'Password reset successful' });
   } catch (err) {
     res.status(500).json({ message: 'Error resetting password', error: err });
+  }
+};
+
+// GET /api/auth/google
+export const googleAuth = async (req: Request, res: Response) => {
+  const { token } = req.body;
+
+  try {
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+    if (!payload || !payload.email) {
+      return res.status(400).json({ message: 'Google authentication failed' });
+    }
+
+    let user = await User.findOne({ email: payload.email });
+
+    if (!user) {
+      user = await User.create({
+        name: payload.name,
+        email: payload.email,
+        isVerified: true,
+        isGoogleUser: true,
+        password: '', // Empty for now, must be set later
+      });
+
+      return res.status(201).json({
+        newUser: true,
+        message: 'Google sign-in successful. Please set your password.',
+        email: user.email,
+        token: jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '7d' })
+      });
+    }
+
+    // If user exists
+    const authToken = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '7d' });
+    res.status(200).json({ token: authToken, user: { id: user._id, name: user.name, email: user.email } });
+  } catch (err) {
+    res.status(500).json({ message: 'Google login failed', error: err });
+  }
+};
+
+// GET api/auth/set-password
+export const setPassword = async (req: Request, res: Response) => {
+  const { email, password } = req.body;
+
+  if (password.length < 6) {
+    return res.status(400).json({ message: 'Password must be at least 6 characters long' });
+  }
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user || !user.isGoogleUser) {
+      return res.status(400).json({ message: 'Invalid request' });
+    }
+
+    user.password = await bcrypt.hash(password, 12);
+    await user.save();
+
+    res.json({ message: 'Password set successfully' });
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to set password', error: err });
   }
 };
