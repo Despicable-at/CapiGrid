@@ -8,6 +8,7 @@ import projectRoutes from './routes/projects';
 import pledgeRoutes from './routes/pledge'; // Import pledge routes
 import profileRoutes from './routes/profile'; // Import profile routes
 import { errorHandler } from './middleware/errorHandler';
+import { applySecurityMiddleware } from './middleware/security';
 import express from 'express';
 import http from 'http';
 import { Server as SocketIOServer } from 'socket.io';
@@ -18,6 +19,7 @@ import { Pledge } from './models/Pledge';
 
 
 const app = express();
+applySecurityMiddleware(app);
 const server = http.createServer(app);
 const io = new SocketIOServer(server, {
   cors: { origin: '*' }
