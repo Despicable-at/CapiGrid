@@ -1,4 +1,5 @@
 import { Schema, model, Document, Types } from 'mongoose';
+projectSchema.index({ title: 'text', description: 'text' });
 
 export enum ProjectStatus {
   Active = 'active',
