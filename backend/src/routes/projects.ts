@@ -1,8 +1,9 @@
-// src/routes/projects.ts
 import { Router } from 'express';
 import {
   createProject,
   listProjects,
+  getFeaturedProjects,
+  getCategoryCounts,
   getProject,
   updateProject,
   deleteProject,
@@ -15,13 +16,15 @@ const router = Router();
 
 // Public
 router.get('/', listProjects);
+router.get('/featured', getFeaturedProjects);
+router.get('/categories', getCategoryCounts);
 router.get('/:id', getProject);
 router.get('/:id/stats', getProjectStats);
 
 // Protected
 router.post('/', requireAuth, createProject);
 router.put('/:id', requireAuth, updateProject);
-router.delete('/:id', requireAuth, deleteProject);
 router.patch('/:id/status', requireAuth, updateProjectStatus);
+router.delete('/:id', requireAuth, deleteProject);
 
 export default router;
