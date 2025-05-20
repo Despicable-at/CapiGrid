@@ -16,6 +16,8 @@ import { connectDB } from './config/db';
 import { User } from './models/User';
 import { Project } from './models/Project';
 import { Pledge } from './models/Pledge';
+import adminRoutes  from './routes/admin';
+import searchRoutes from './routes/search';
 
 
 const app = express();
