@@ -25,6 +25,7 @@ export interface IProject extends Document {
   category: Category;
   isFeatured: boolean;
   createdAt: Date;
+  percentFunded?: number;
 }
 
 // Create text index for search
