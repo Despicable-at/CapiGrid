@@ -1,11 +1,10 @@
-// src/controllers/projectController.ts
 import { Request, Response } from 'express';
-import { Project, IProject } from '../models/Project';
+import { Project, ProjectStatus, Categories } from '../models/Project';
 
 // POST /api/projects
 export const createProject = async (req: Request, res: Response) => {
   try {
-    const { title, description, goalAmount, deadline } = req.body;
+    const { title, description, goalAmount, deadline, category, isFeatured } = req.body;
     const creator = (req as any).userId;
     const project = await Project.create({
       title,
@@ -13,20 +12,51 @@ export const createProject = async (req: Request, res: Response) => {
       goalAmount,
       deadline,
       creator,
-    } as Partial<IProject>);
+      category,
+      isFeatured: Boolean(isFeatured),
+    });
     res.status(201).json(project);
   } catch (err) {
     res.status(500).json({ message: 'Create project failed', error: err });
   }
 };
 
-// GET /api/projects
-export const listProjects = async (_req: Request, res: Response) => {
+// GET /api/projects?category=... 
+export const listProjects = async (req: Request, res: Response) => {
   try {
-    const projects = await Project.find().populate('creator', 'name email');
+    const filter: any = {};
+    if (req.query.category && Categories.includes(String(req.query.category) as any)) {
+      filter.category = req.query.category;
+    }
+    const projects = await Project.find(filter).populate('creator', 'name email');
     res.json(projects);
   } catch (err) {
     res.status(500).json({ message: 'List projects failed', error: err });
+  }
+};
+
+// GET /api/projects/featured
+export const getFeaturedProjects = async (_req: Request, res: Response) => {
+  try {
+    const projects = await Project.find({ isFeatured: true }).populate('creator', 'name email');
+    res.json(projects);
+  } catch (err) {
+    res.status(500).json({ message: 'Fetch featured failed', error: err });
+  }
+};
+
+// GET /api/projects/categories
+export const getCategoryCounts = async (_req: Request, res: Response) => {
+  try {
+    const counts = await Promise.all(
+      Categories.map(async (cat) => {
+        const count = await Project.countDocuments({ category: cat });
+        return { category: cat, count };
+      })
+    );
+    res.json(counts);
+  } catch (err) {
+    res.status(500).json({ message: 'Category counts failed', error: err });
   }
 };
 
@@ -49,11 +79,8 @@ export const updateProject = async (req: Request, res: Response) => {
     if (project.creator.toString() !== (req as any).userId)
       return res.status(403).json({ message: 'Not authorized' });
 
-    const updates = (({ title, description, goalAmount, deadline }) => ({
-      title, description, goalAmount, deadline,
-    }))(req.body);
-
-    Object.assign(project, updates);
+    const { title, description, goalAmount, deadline, category, isFeatured, status } = req.body;
+    Object.assign(project, { title, description, goalAmount, deadline, category, isFeatured, status });
     await project.save();
     res.json(project);
   } catch (err) {
@@ -84,11 +111,7 @@ export const updateProjectStatus = async (req: Request, res: Response) => {
     return res.status(400).json({ message: 'Invalid status' });
   }
   try {
-    const project = await Project.findByIdAndUpdate(
-      id,
-      { status },
-      { new: true }
-    );
+    const project = await Project.findByIdAndUpdate(id, { status }, { new: true });
     if (!project) return res.status(404).json({ message: 'Project not found' });
     res.json(project);
   } catch (err) {
