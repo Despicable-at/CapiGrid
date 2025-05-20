@@ -1,11 +1,18 @@
 import { Schema, model, Document, Types } from 'mongoose';
-projectSchema.index({ title: 'text', description: 'text' });
 
 export enum ProjectStatus {
   Active = 'active',
   Completed = 'completed',
   Canceled = 'canceled',
 }
+
+export const Categories = [
+  'Art & Design',
+  'Technology',
+  'Games',
+  'Social Causes',
+] as const;
+export type Category = typeof Categories[number];
 
 export interface IProject extends Document {
   title: string;
@@ -15,11 +22,12 @@ export interface IProject extends Document {
   creator: Types.ObjectId;
   deadline: Date;
   status: ProjectStatus;
+  category: Category;
+  isFeatured: boolean;
   createdAt: Date;
 }
 
-
-
+// Create text index for search
 const projectSchema = new Schema<IProject>(
   {
     title: { type: String, required: true, trim: true },
@@ -33,6 +41,12 @@ const projectSchema = new Schema<IProject>(
       enum: Object.values(ProjectStatus),
       default: ProjectStatus.Active,
     },
+    category: {
+      type: String,
+      enum: Categories,
+      required: true,
+    },
+    isFeatured: { type: Boolean, default: false },
   },
   {
     timestamps: { createdAt: true, updatedAt: false },
@@ -40,6 +54,9 @@ const projectSchema = new Schema<IProject>(
     toObject: { virtuals: true },
   }
 );
+
+// Text search index
+projectSchema.index({ title: 'text', description: 'text' });
 
 // Virtual: percentFunded
 projectSchema.virtual('percentFunded').get(function (this: IProject) {
