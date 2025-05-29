@@ -322,55 +322,96 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-    // 🔽🔽🔽 ADDED SECTION: FRONTEND SERVING MECHANISM 🔽🔽🔽
+  // UNIVERSAL FRONTEND SERVING SOLUTION
   // =====================================================================
   
-  // 1. Serve static files in production environment
-  if (process.env.NODE_ENV === "production") {
-    // Determine the correct path to your frontend build directory
-    const frontendPath = path.join(
-      process.cwd(), // Root of your project on Render
-      "client",     // Adjust to your frontend directory name
-      "public"        // Adjust to your build output directory
-    );
+  // Try to find frontend files in common locations
+  const findFrontendFiles = () => {
+    const possibleLocations = [
+      path.join(process.cwd(), "client", "public"),
+      path.join(process.cwd(), "frontend", "public"),
+      path.join(process.cwd(), "web", "public"),
+      path.join(process.cwd(), "src", "client"),
+      path.join(process.cwd(), "public"),
+      path.join(process.cwd(), "client"),
+      path.join(process.cwd(), "frontend"),
+      path.join(process.cwd(), "web"),
+    ];
 
-    console.log("[SERVER] Serving frontend from:", frontendPath);
-
-    // Verify the build directory exists
-    if (!fs.existsSync(frontendPath)) {
-      console.error("[SERVER] ERROR: Frontend build directory not found!");
-      console.error("[SERVER] Expected path:", frontendPath);
-      console.error("[SERVER] Verify your build process and directory structure");
-    } else {
-      console.log("[SERVER] Found build files:", fs.readdirSync(frontendPath));
+    for (const location of possibleLocations) {
+      if (fs.existsSync(path.join(location, "index.html"))) {
+        return location;
+      }
     }
+    return null;
+  };
 
-    // Serve static files (HTML, JS, CSS, images)
+  const frontendPath = findFrontendFiles();
+
+  if (frontendPath) {
+    console.log(`[SERVER] Serving frontend from: ${frontendPath}`);
     app.use(express.static(frontendPath));
 
-    // 2. Handle client-side routing - return index.html for all non-API routes
+    // Handle client-side routing
     app.get("*", (req, res) => {
-      // First check if it's an API route
+      // API route handling
       if (req.path.startsWith("/api")) {
         return res.status(404).json({ message: "API endpoint not found" });
       }
       
       // Serve index.html for all other routes
-      res.sendFile(path.join(frontendPath, "index.html"), (err) => {
-        if (err) {
-          console.error("[SERVER] Error serving index.html:", err);
-          res.status(500).send("Frontend loading error");
-        }
-      });
+      const indexPath = path.join(frontendPath, "index.html");
+      if (fs.existsSync(indexPath)) {
+        res.sendFile(indexPath, (err) => {
+          if (err) {
+            console.error("[SERVER] Error serving index.html:", err);
+            res.status(500).send("Frontend loading error");
+          }
+        });
+      } else {
+        res.status(500).send(`
+          <h1>Configuration Error</h1>
+          <p>index.html not found at: ${indexPath}</p>
+          <p>Frontend files found at: ${frontendPath}</p>
+          <pre>${fs.readdirSync(frontendPath).join('\n')}</pre>
+        `);
+      }
     });
   } else {
-    // Development mode message
-    console.log("[SERVER] Running in development mode - frontend not served");
+    console.error("[SERVER] ERROR: Could not find frontend files!");
+    
+    // Create a basic homepage as fallback
+    app.get("/", (req, res) => {
+      res.send(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>CapiGrid</title>
+          <style>
+            body { font-family: sans-serif; padding: 2rem; }
+            .error { color: #d00; }
+          </style>
+        </head>
+        <body>
+          <h1>CapiGrid Application</h1>
+          <p class="error">Frontend files not found! Check server logs.</p>
+          <p>Your API is running correctly. Try these endpoints:</p>
+          <ul>
+            <li><a href="/api/campaigns">/api/campaigns</a> - List campaigns</li>
+            <li><a href="/api/users">/api/users</a> - List users</li>
+            <li><a href="/api/categories">/api/categories</a> - List categories</li>
+          </ul>
+          <p>If you're seeing this in production, check:</p>
+          <ol>
+            <li>Your frontend files are in the project</li>
+            <li>They're in a folder named client/, frontend/, web/, or public/</li>
+            <li>The folder contains an index.html file</li>
+          </ol>
+        </body>
+        </html>
+      `);
+    });
   }
-
-  // =====================================================================
-  // 🔼🔼🔼 END OF ADDED SECTION 🔼🔼🔼
-
   const httpServer = createServer(app);
   return httpServer;
 }
