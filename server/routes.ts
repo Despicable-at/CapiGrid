@@ -331,7 +331,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     const frontendPath = path.join(
       process.cwd(), // Root of your project on Render
       "client",     // Adjust to your frontend directory name
-      "dist"        // Adjust to your build output directory
+      "public"        // Adjust to your build output directory
     );
 
     console.log("[SERVER] Serving frontend from:", frontendPath);
