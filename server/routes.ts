@@ -1,126 +1,327 @@
-import { pgTable, text, serial, integer, boolean, timestamp, decimal, json } from "drizzle-orm/pg-core";
-import { createInsertSchema } from "drizzle-zod";
+import type { Express } from "express";
+import { createServer, type Server } from "http";
+import { MongoStorage } from "./mongodb-storage";
+
+const storage = new MongoStorage();
+import {
+  insertUserSchema,
+  insertCampaignSchema,
+  insertRewardSchema,
+  insertContributionSchema,
+  insertCampaignUpdateSchema,
+} from "@shared/schema";
 import { z } from "zod";
 
-export const users = pgTable("users", {
-  id: serial("id").primaryKey(),
-  username: text("username").notNull().unique(),
-  email: text("email").notNull().unique(),
-  password: text("password").notNull(),
-  fullName: text("full_name").notNull(),
-  avatar: text("avatar"),
-  bio: text("bio"),
-  isCreator: boolean("is_creator").default(false),
-  createdAt: timestamp("created_at").defaultNow(),
+const loginSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(1),
 });
 
-export const categories = pgTable("categories", {
-  id: serial("id").primaryKey(),
-  name: text("name").notNull(),
-  icon: text("icon").notNull(),
-  slug: text("slug").notNull().unique(),
-  projectCount: integer("project_count").default(0),
-});
+export async function registerRoutes(app: Express): Promise<Server> {
+  // Auth routes
+  app.post("/api/auth/register", async (req, res) => {
+    try {
+      const userData = insertUserSchema.parse(req.body);
+      
+      // Check if user already exists
+      const existingUser = await storage.getUserByEmail(userData.email);
+      if (existingUser) {
+        return res.status(400).json({ message: "User already exists" });
+      }
 
-export const campaigns = pgTable("campaigns", {
-  id: serial("id").primaryKey(),
-  title: text("title").notNull(),
-  description: text("description").notNull(),
-  shortDescription: text("short_description").notNull(),
-  goalAmount: decimal("goal_amount", { precision: 10, scale: 2 }).notNull(),
-  currentAmount: decimal("current_amount", { precision: 10, scale: 2 }).default("0"),
-  creatorId: integer("creator_id").references(() => users.id).notNull(),
-  categoryId: integer("category_id").references(() => categories.id).notNull(),
-  type: text("type", { enum: ["reward", "donation", "equity"] }).notNull(),
-  status: text("status", { enum: ["draft", "active", "funded", "cancelled", "ended"] }).default("draft"),
-  image: text("image").notNull(),
-  gallery: text("gallery").array(),
-  endDate: timestamp("end_date").notNull(),
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
-  backerCount: integer("backer_count").default(0),
-  featured: boolean("featured").default(false),
-});
+      const user = await storage.createUser(userData);
+      const { password, ...userWithoutPassword } = user;
+      res.json(userWithoutPassword);
+    } catch (error) {
+      res.status(400).json({ message: error instanceof Error ? error.message : "Invalid data" });
+    }
+  });
 
-export const rewards = pgTable("rewards", {
-  id: serial("id").primaryKey(),
-  campaignId: integer("campaign_id").references(() => campaigns.id).notNull(),
-  title: text("title").notNull(),
-  description: text("description").notNull(),
-  amount: decimal("amount", { precision: 10, scale: 2 }).notNull(),
-  limitedQuantity: integer("limited_quantity"),
-  claimed: integer("claimed").default(0),
-  estimatedDelivery: text("estimated_delivery"),
-});
+  app.post("/api/auth/login", async (req, res) => {
+    try {
+      const { email, password } = loginSchema.parse(req.body);
+      
+      const user = await storage.getUserByEmail(email);
+      if (!user || user.password !== password) {
+        return res.status(401).json({ message: "Invalid credentials" });
+      }
 
-export const contributions = pgTable("contributions", {
-  id: serial("id").primaryKey(),
-  campaignId: integer("campaign_id").references(() => campaigns.id).notNull(),
-  userId: integer("user_id").references(() => users.id).notNull(),
-  amount: decimal("amount", { precision: 10, scale: 2 }).notNull(),
-  rewardId: integer("reward_id").references(() => rewards.id),
-  message: text("message"),
-  anonymous: boolean("anonymous").default(false),
-  createdAt: timestamp("created_at").defaultNow(),
-});
+      const { password: _, ...userWithoutPassword } = user;
+      res.json(userWithoutPassword);
+    } catch (error) {
+      res.status(400).json({ message: error instanceof Error ? error.message : "Invalid data" });
+    }
+  });
 
-export const campaignUpdates = pgTable("campaign_updates", {
-  id: serial("id").primaryKey(),
-  campaignId: integer("campaign_id").references(() => campaigns.id).notNull(),
-  title: text("title").notNull(),
-  content: text("content").notNull(),
-  createdAt: timestamp("created_at").defaultNow(),
-});
+  // User routes
+  app.get("/api/users/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const user = await storage.getUser(id);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      const { password, ...userWithoutPassword } = user;
+      res.json(userWithoutPassword);
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
 
-// Insert schemas
-export const insertUserSchema = createInsertSchema(users).omit({
-  id: true,
-  createdAt: true,
-});
+  app.put("/api/users/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const updates = insertUserSchema.partial().parse(req.body);
+      
+      const user = await storage.updateUser(id, updates);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      const { password, ...userWithoutPassword } = user;
+      res.json(userWithoutPassword);
+    } catch (error) {
+      res.status(400).json({ message: error instanceof Error ? error.message : "Invalid data" });
+    }
+  });
 
-export const insertCategorySchema = createInsertSchema(categories).omit({
-  id: true,
-  projectCount: true,
-});
+  // Category routes
+  app.get("/api/categories", async (req, res) => {
+    try {
+      const categories = await storage.getCategories();
+      res.json(categories);
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
 
-export const insertCampaignSchema = createInsertSchema(campaigns).omit({
-  id: true,
-  currentAmount: true,
-  createdAt: true,
-  updatedAt: true,
-  backerCount: true,
-});
+  app.get("/api/categories/:slug", async (req, res) => {
+    try {
+      const category = await storage.getCategoryBySlug(req.params.slug);
+      if (!category) {
+        return res.status(404).json({ message: "Category not found" });
+      }
+      res.json(category);
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
 
-export const insertRewardSchema = createInsertSchema(rewards).omit({
-  id: true,
-  claimed: true,
-});
+  // Campaign routes
+  app.get("/api/campaigns", async (req, res) => {
+    try {
+      const filters = {
+        status: req.query.status as string,
+        category: req.query.category as string,
+        featured: req.query.featured === "true" ? true : undefined,
+        creatorId: req.query.creatorId ? parseInt(req.query.creatorId as string) : undefined,
+      };
+      const campaigns = await storage.getCampaigns(filters);
+      res.json(campaigns);
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
 
-export const insertContributionSchema = createInsertSchema(contributions).omit({
-  id: true,
-  createdAt: true,
-});
+  app.get("/api/campaigns/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const campaign = await storage.getCampaign(id);
+      if (!campaign) {
+        return res.status(404).json({ message: "Campaign not found" });
+      }
+      res.json(campaign);
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
 
-export const insertCampaignUpdateSchema = createInsertSchema(campaignUpdates).omit({
-  id: true,
-  createdAt: true,
-});
+  app.post("/api/campaigns", async (req, res) => {
+    try {
+      const campaignData = insertCampaignSchema.parse(req.body);
+      const campaign = await storage.createCampaign(campaignData);
+      res.status(201).json(campaign);
+    } catch (error) {
+      res.status(400).json({ message: error instanceof Error ? error.message : "Invalid data" });
+    }
+  });
 
-// Types
-export type User = typeof users.$inferSelect;
-export type InsertUser = z.infer<typeof insertUserSchema>;
+  app.put("/api/campaigns/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const updates = insertCampaignSchema.partial().parse(req.body);
+      
+      const campaign = await storage.updateCampaign(id, updates);
+      if (!campaign) {
+        return res.status(404).json({ message: "Campaign not found" });
+      }
+      
+      res.json(campaign);
+    } catch (error) {
+      res.status(400).json({ message: error instanceof Error ? error.message : "Invalid data" });
+    }
+  });
 
-export type Category = typeof categories.$inferSelect;
-export type InsertCategory = z.infer<typeof insertCategorySchema>;
+  // Reward routes
+  app.get("/api/campaigns/:id/rewards", async (req, res) => {
+    try {
+      const campaignId = parseInt(req.params.id);
+      const rewards = await storage.getRewardsByCampaign(campaignId);
+      res.json(rewards);
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
 
-export type Campaign = typeof campaigns.$inferSelect;
-export type InsertCampaign = z.infer<typeof insertCampaignSchema>;
+  app.post("/api/campaigns/:id/rewards", async (req, res) => {
+    try {
+      const campaignId = parseInt(req.params.id);
+      const rewardData = insertRewardSchema.parse({
+        ...req.body,
+        campaignId,
+      });
+      const reward = await storage.createReward(rewardData);
+      res.status(201).json(reward);
+    } catch (error) {
+      res.status(400).json({ message: error instanceof Error ? error.message : "Invalid data" });
+    }
+  });
 
-export type Reward = typeof rewards.$inferSelect;
-export type InsertReward = z.infer<typeof insertRewardSchema>;
+  // Contribution routes
+  app.get("/api/campaigns/:id/contributions", async (req, res) => {
+    try {
+      const campaignId = parseInt(req.params.id);
+      const contributions = await storage.getContributionsByCampaign(campaignId);
+      res.json(contributions);
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
 
-export type Contribution = typeof contributions.$inferSelect;
-export type InsertContribution = z.infer<typeof insertContributionSchema>;
+  app.post("/api/campaigns/:id/contributions", async (req, res) => {
+    try {
+      const campaignId = parseInt(req.params.id);
+      const contributionData = insertContributionSchema.parse({
+        ...req.body,
+        campaignId,
+      });
+      const contribution = await storage.createContribution(contributionData);
+      res.status(201).json(contribution);
+    } catch (error) {
+      res.status(400).json({ message: error instanceof Error ? error.message : "Invalid data" });
+    }
+  });
 
-export type CampaignUpdate = typeof campaignUpdates.$inferSelect;
-export type InsertCampaignUpdate = z.infer<typeof insertCampaignUpdateSchema>;
+  app.get("/api/users/:id/contributions", async (req, res) => {
+    try {
+      const userId = parseInt(req.params.id);
+      const contributions = await storage.getContributionsByUser(userId);
+      res.json(contributions);
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Campaign Updates routes
+  app.get("/api/campaigns/:id/updates", async (req, res) => {
+    try {
+      const campaignId = parseInt(req.params.id);
+      const updates = await storage.getUpdatesByCampaign(campaignId);
+      res.json(updates);
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.post("/api/campaigns/:id/updates", async (req, res) => {
+    try {
+      const campaignId = parseInt(req.params.id);
+      const updateData = insertCampaignUpdateSchema.parse({
+        ...req.body,
+        campaignId,
+      });
+      const update = await storage.createCampaignUpdate(updateData);
+      res.status(201).json(update);
+    } catch (error) {
+      res.status(400).json({ message: error instanceof Error ? error.message : "Invalid data" });
+    }
+  });
+
+  // Stats route
+  app.get("/api/stats", async (req, res) => {
+    try {
+      const stats = await storage.getStats();
+      res.json(stats);
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Admin routes
+  app.get("/api/admin/users", async (req, res) => {
+    try {
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 20;
+      const result = await (storage as any).getAllUsers(page, limit);
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.get("/api/admin/campaigns", async (req, res) => {
+    try {
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 20;
+      const result = await (storage as any).getAllCampaigns(page, limit);
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.put("/api/admin/users/:id/toggle", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { isActive } = req.body;
+      const user = await (storage as any).toggleUserStatus(id, isActive);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      res.json(user);
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.put("/api/admin/campaigns/:id/approve", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { approved, notes } = req.body;
+      const campaign = await (storage as any).approveCampaign(id, approved, notes);
+      if (!campaign) {
+        return res.status(404).json({ message: "Campaign not found" });
+      }
+      res.json(campaign);
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.put("/api/admin/campaigns/:id/feature", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { featured } = req.body;
+      const campaign = await (storage as any).featureCampaign(id, featured);
+      if (!campaign) {
+        return res.status(404).json({ message: "Campaign not found" });
+      }
+      res.json(campaign);
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  const httpServer = createServer(app);
+  return httpServer;
+}
