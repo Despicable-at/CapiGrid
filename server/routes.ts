@@ -322,6 +322,55 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+    // 🔽🔽🔽 ADDED SECTION: FRONTEND SERVING MECHANISM 🔽🔽🔽
+  // =====================================================================
+  
+  // 1. Serve static files in production environment
+  if (process.env.NODE_ENV === "production") {
+    // Determine the correct path to your frontend build directory
+    const frontendPath = path.join(
+      process.cwd(), // Root of your project on Render
+      "client",     // Adjust to your frontend directory name
+      "dist"        // Adjust to your build output directory
+    );
+
+    console.log("[SERVER] Serving frontend from:", frontendPath);
+
+    // Verify the build directory exists
+    if (!fs.existsSync(frontendPath)) {
+      console.error("[SERVER] ERROR: Frontend build directory not found!");
+      console.error("[SERVER] Expected path:", frontendPath);
+      console.error("[SERVER] Verify your build process and directory structure");
+    } else {
+      console.log("[SERVER] Found build files:", fs.readdirSync(frontendPath));
+    }
+
+    // Serve static files (HTML, JS, CSS, images)
+    app.use(express.static(frontendPath));
+
+    // 2. Handle client-side routing - return index.html for all non-API routes
+    app.get("*", (req, res) => {
+      // First check if it's an API route
+      if (req.path.startsWith("/api")) {
+        return res.status(404).json({ message: "API endpoint not found" });
+      }
+      
+      // Serve index.html for all other routes
+      res.sendFile(path.join(frontendPath, "index.html"), (err) => {
+        if (err) {
+          console.error("[SERVER] Error serving index.html:", err);
+          res.status(500).send("Frontend loading error");
+        }
+      });
+    });
+  } else {
+    // Development mode message
+    console.log("[SERVER] Running in development mode - frontend not served");
+  }
+
+  // =====================================================================
+  // 🔼🔼🔼 END OF ADDED SECTION 🔼🔼🔼
+
   const httpServer = createServer(app);
   return httpServer;
 }
