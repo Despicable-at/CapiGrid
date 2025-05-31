@@ -3,46 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Capigrid - A modern crowdfunding platform supporting all funding models with secure blockchain payments">
-  <meta name="keywords" content="crowdfunding, blockchain, fundraising, investments">
-  <meta property="og:title" content="Capigrid Crowdfunding Platform">
-  <meta property="og:description" content="Launch or support innovative projects with secure blockchain payments">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://capigrid.onrender.com">
+  <title>Capigrid Crowdfunding Platform</title>
   
-  <title>Capigrid - Modern Crowdfunding Platform</title>
-  
-  <!-- Preloads for faster loading -->
+  <!-- Essential Preloads -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preconnect" href="https://api.paystack.com">
   
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
-  <!-- Global Styles -->
+  <!-- Minimal Global Styles -->
   <style>
-    :root {
-      --primary: #00b964;
-      --primary-dark: #008a4b;
-      --secondary: #2e3c4b;
-      --accent: #fed857;
-      --accent-dark: #e6c34d;
-      --light-bg: #f6f3f1;
-      --dark-bg: #2a3746;
-      --text: #333;
-      --text-light: #74797e;
-      --white: #ffffff;
-      --success: #4CAF50;
-      --danger: #f44336;
-      --border-radius: 8px;
-      --box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      --transition: all 0.3s ease;
-    }
-    
     * {
       box-sizing: border-box;
       margin: 0;
@@ -51,12 +22,11 @@
     
     body {
       font-family: 'Barlow', sans-serif;
-      color: var(--text);
-      background-color: var(--white);
+      background-color: #ffffff;
+      color: #333333;
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
-      overflow-x: hidden;
     }
     
     #root {
@@ -64,230 +34,12 @@
       display: flex;
       flex-direction: column;
     }
-    
-    a {
-      color: var(--primary);
-      text-decoration: none;
-      transition: var(--transition);
-    }
-    
-    a:hover {
-      color: var(--primary-dark);
-    }
-    
-    button, .btn {
-      display: inline-block;
-      padding: 12px 24px;
-      background-color: var(--accent);
-      color: var(--secondary);
-      border: none;
-      border-radius: var(--border-radius);
-      font-weight: 600;
-      font-size: 16px;
-      cursor: pointer;
-      transition: var(--transition);
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      font-family: 'Barlow', sans-serif;
-    }
-    
-    button:hover, .btn:hover {
-      background-color: var(--accent-dark);
-      transform: translateY(-2px);
-      box-shadow: var(--box-shadow);
-    }
-    
-    button.primary, .btn.primary {
-      background-color: var(--primary);
-      color: var(--white);
-    }
-    
-    button.primary:hover, .btn.primary:hover {
-      background-color: var(--primary-dark);
-    }
-    
-    button.secondary, .btn.secondary {
-      background-color: var(--secondary);
-      color: var(--white);
-    }
-    
-    button.secondary:hover, .btn.secondary:hover {
-      background-color: #3a4a5d;
-    }
-    
-    .container {
-      width: 100%;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 20px;
-    }
-    
-    .section {
-      padding: 80px 0;
-    }
-    
-    .section-header {
-      text-align: center;
-      margin-bottom: 60px;
-    }
-    
-    .section-title {
-      font-size: 2.5rem;
-      color: var(--secondary);
-      margin-bottom: 15px;
-    }
-    
-    .section-subtitle {
-      font-size: 1.2rem;
-      color: var(--text-light);
-      max-width: 700px;
-      margin: 0 auto;
-    }
-    
-    /* Loading spinner */
-    .spinner {
-      width: 40px;
-      height: 40px;
-      border: 4px solid rgba(0, 0, 0, 0.1);
-      border-left-color: var(--primary);
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin: 0 auto;
-    }
-    
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-    
-    /* Admin security notice */
-    .admin-security {
-      background-color: #fff8e1;
-      border-left: 4px solid #ffc107;
-      padding: 15px;
-      margin: 20px 0;
-      border-radius: 4px;
-    }
-    
-    /* Responsive design */
-    @media (max-width: 768px) {
-      .section {
-        padding: 60px 0;
-      }
-      
-      .section-title {
-        font-size: 2rem;
-      }
-      
-      .section-subtitle {
-        font-size: 1rem;
-      }
-    }
   </style>
 </head>
 <body>
-  <div id="root">
-    <!-- React will render here -->
-    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); padding: 20px; text-align: center;">
-      <div style="max-width: 800px; background: white; border-radius: 20px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
-        <h1 style="font-size: 2.5rem; color: #2e3c4b; margin-bottom: 20px;">Capigrid Crowdfunding Platform</h1>
-        <p style="font-size: 1.2rem; color: #74797e; margin-bottom: 30px; line-height: 1.7;">
-          A modern React.js crowdfunding platform with blockchain integration and secure payments
-        </p>
-        
-        <div class="spinner" style="margin: 30px auto;"></div>
-        
-        <div style="background: #f0f9f4; border-radius: 12px; padding: 25px; margin: 30px 0; border-left: 4px solid #00b964;">
-          <h3 style="color: #00b964; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
-            <i class="fas fa-lock"></i> Application Status
-          </h3>
-          <p style="color: #2e3c4b; margin-bottom: 10px;">
-            <strong>React.js</strong> application is building...
-          </p>
-          <p style="color: #2e3c4b; margin-bottom: 10px;">
-            Connecting to <strong>MongoDB</strong> database...
-          </p>
-          <p style="color: #2e3c4b; margin-bottom: 10px;">
-            Initializing <strong>blockchain</strong> payment system...
-          </p>
-        </div>
-        
-        <div class="admin-security">
-          <h3 style="color: #2e3c4b; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
-            <i class="fas fa-shield-alt"></i> Admin Security Enabled
-          </h3>
-          <p style="color: #2e3c4b; margin-bottom: 10px;">
-            <strong>2FA authentication</strong> and <strong>IP allowlisting</strong> activated
-          </p>
-          <p style="color: #2e3c4b;">
-            Admin sessions secured with <strong>JWT tokens</strong> and <strong>rate limiting</strong>
-          </p>
-        </div>
-        
-        <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; margin-top: 40px;">
-          <button class="btn primary">
-            <i class="fas fa-rocket"></i> View Live Demo
-          </button>
-          <button class="btn secondary">
-            <i class="fab fa-github"></i> GitHub Repository
-          </button>
-        </div>
-        
-        <div style="margin-top: 40px; padding-top: 30px; border-top: 1px solid #eee;">
-          <h3 style="color: #2e3c4b; margin-bottom: 20px;">Technology Stack</h3>
-          <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;">
-            <div style="background: #f6f3f1; padding: 10px 20px; border-radius: 50px; display: flex; align-items: center; gap: 8px;">
-              <i class="fab fa-react" style="color: #61DAFB;"></i> React.js
-            </div>
-            <div style="background: #f6f3f1; padding: 10px 20px; border-radius: 50px; display: flex; align-items: center; gap: 8px;">
-              <i class="fas fa-database" style="color: #00b964;"></i> MongoDB
-            </div>
-            <div style="background: #f6f3f1; padding: 10px 20px; border-radius: 50px; display: flex; align-items: center; gap: 8px;">
-              <i class="fab fa-ethereum" style="color: #3C3C3D;"></i> Blockchain
-            </div>
-            <div style="background: #f6f3f1; padding: 10px 20px; border-radius: 50px; display: flex; align-items: center; gap: 8px;">
-              <i class="fas fa-lock" style="color: #fed857;"></i> Paystack
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
+  <div id="root"></div>
+  
   <!-- React build output -->
   <script type="module" src="/src/main.jsx"></script>
-  
-  <!-- Blockchain integration -->
-  <script>
-    // Initialize Web3 for blockchain payments
-    if (typeof window.ethereum !== 'undefined') {
-      console.log('Ethereum wallet detected');
-      
-      // Initialize Web3
-      window.web3 = new Web3(window.ethereum);
-      
-      try {
-        // Request account access
-        await window.ethereum.request({ method: 'eth_requestAccounts' });
-        console.log('Ethereum wallet connected');
-      } catch (error) {
-        console.error('User denied account access');
-      }
-    } else {
-      console.log('No Ethereum wallet detected');
-    }
-    
-    // Paystack integration
-    function initializePaystack() {
-      const paystackScript = document.createElement('script');
-      paystackScript.src = 'https://js.paystack.co/v1/inline.js';
-      document.head.appendChild(paystackScript);
-      
-      paystackScript.onload = () => {
-        console.log('Paystack loaded successfully');
-      };
-    }
-    
-    initializePaystack();
-  </script>
 </body>
 </html>
