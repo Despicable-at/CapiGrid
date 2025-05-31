@@ -62,7 +62,6 @@ function Router() {
         <Route component={NotFound} />
       </Switch>
     </div>
-    </div>
   );
 }
 
