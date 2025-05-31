@@ -41,6 +41,7 @@ function Router() {
 
   return (
     <div className="min-h-screen bg-background">
+    <div style={{ color: "red", fontSize: 32 }}>I am rendering!</div>
       <Header 
         currentUser={currentUser} 
         onAuthSuccess={handleAuthSuccess}
@@ -61,11 +62,13 @@ function Router() {
         <Route component={NotFound} />
       </Switch>
     </div>
+    </div>
   );
 }
 
 function App() {
   return (
+    
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
